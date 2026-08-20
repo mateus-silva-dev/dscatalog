@@ -4,7 +4,8 @@ import io.github.mateussilva.dscatalog.dto.CategoryDTO;
 import io.github.mateussilva.dscatalog.entities.Category;
 import io.github.mateussilva.dscatalog.mapper.CategoryMapper;
 import io.github.mateussilva.dscatalog.repositories.CategoryRepository;
-import io.github.mateussilva.dscatalog.services.exceptions.EntityNotFoundException;
+import io.github.mateussilva.dscatalog.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +32,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryDTO findById(Long id) {
-        Category entity = repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Category entity = repository.findById(id).orElseThrow(ResourceNotFoundException::new);
         return mapper.toDTO(entity);
     }
 
@@ -40,5 +41,16 @@ public class CategoryService {
         Category category = mapper.toEntity(dto);
         category = repository.save(category);
         return mapper.toDTO(category);
+    }
+
+    @Transactional
+    public CategoryDTO update(Long id, CategoryDTO dto) {
+        try {
+            Category category = repository.getReferenceById(id);
+            category.setName(dto.name());
+            return mapper.toDTO(repository.save(category));
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException();
+        }
     }
 }

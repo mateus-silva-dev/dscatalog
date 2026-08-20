@@ -2,7 +2,7 @@ package io.github.mateussilva.dscatalog.controllers.handlers;
 
 import io.github.mateussilva.dscatalog.dto.CustomError;
 import io.github.mateussilva.dscatalog.services.exceptions.DatabaseException;
-import io.github.mateussilva.dscatalog.services.exceptions.EntityNotFoundException;
+import io.github.mateussilva.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +14,8 @@ import org.springframework.web.util.HtmlUtils;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<CustomError> resourceNotFound(EntityNotFoundException e, HttpServletRequest request) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<CustomError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         String path = HtmlUtils.htmlEscape(request.getRequestURI());
         return ResponseEntity
