@@ -1,3 +1,9 @@
 spring:
   application:
     name: dscatalog
+
+  jpa:
+    open-in-view: true
+
+  profiles:
+    active: ${APP_PROFILE:test}
