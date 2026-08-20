@@ -34,4 +34,11 @@ public class CategoryService {
         Category entity = repository.findById(id).orElseThrow(EntityNotFoundException::new);
         return mapper.toDTO(entity);
     }
+
+    @Transactional
+    public CategoryDTO insert(CategoryDTO dto) {
+        Category category = mapper.toEntity(dto);
+        category = repository.save(category);
+        return mapper.toDTO(category);
+    }
 }

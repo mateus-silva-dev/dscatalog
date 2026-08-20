@@ -3,10 +3,10 @@ package io.github.mateussilva.dscatalog.controllers;
 import io.github.mateussilva.dscatalog.dto.CategoryDTO;
 import io.github.mateussilva.dscatalog.services.CategoryService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -26,8 +26,18 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> findById(Long id) {
+    public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
         CategoryDTO dto = service.findById(id);
         return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping
+    public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto) {
+        dto = service.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(dto.id())
+                .toUri();
+        return ResponseEntity.created(uri).body(dto);
     }
 }

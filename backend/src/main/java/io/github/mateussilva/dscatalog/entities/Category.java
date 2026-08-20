@@ -2,18 +2,21 @@ package io.github.mateussilva.dscatalog.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_category")
 @Getter
+@Setter
 public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
 
@@ -29,11 +32,13 @@ public class Category {
     public final boolean equals(Object o) {
         if (!(o instanceof Category category)) return false;
 
-        return Objects.equals(id, category.id);
+        return Objects.equals(id, category.id) && Objects.equals(name, category.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        int result = Objects.hashCode(id);
+        result = 31 * result + Objects.hashCode(name);
+        return result;
     }
 }
